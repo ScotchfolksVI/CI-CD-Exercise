@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        NODE_VERSION = '18'
+        NODE_VERSION = '24'
         NPM_CACHE = '/tmp/.npm'
     }
     

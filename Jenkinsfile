@@ -19,7 +19,11 @@ pipeline {
                 echo 'Setting up Node.js environment...'
                 script {
                     def nodeHome = tool name: 'NodeJS-18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
+                    if (isUnix()) {
+                        env.PATH = "${nodeHome}/bin:${env.PATH}"
+                    } else {
+                        env.PATH = "${nodeHome};${env.PATH}"
+                    }
                 }
             }
         }
@@ -27,27 +31,52 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing npm dependencies...'
-                sh 'npm ci'
+                script {
+                    if (isUnix()) {
+                        sh 'npm ci'
+                    } else {
+                        bat 'npm ci'
+                    }
+                }
             }
         }
         
         stage('Start Application') {
             steps {
                 echo 'Starting the Node.js application...'
-                sh 'npm start &'
-                sh 'sleep 10'
+                script {
+                    if (isUnix()) {
+                        sh 'npm start &'
+                        sh 'sleep 10'
+                    } else {
+                        bat 'start /B npm start'
+                        bat 'timeout /T 10 >NUL'
+                    }
+                }
             }
         }
         
         stage('Run Tests') {
             steps {
                 echo 'Running application tests...'
-                sh 'npm test'
+                script {
+                    if (isUnix()) {
+                        sh 'npm test'
+                    } else {
+                        bat 'npm test'
+                    }
+                }
             }
             post {
                 always {
                     echo 'Cleaning up running processes...'
-                    sh 'pkill -f "node index.js" || true'
+                    script {
+                        if (isUnix()) {
+                            sh 'pkill -f "node index.js" || true'
+                        } else {
+                            bat 'taskkill /F /IM node.exe || exit 0'
+                        }
+                    }
                 }
             }
         }

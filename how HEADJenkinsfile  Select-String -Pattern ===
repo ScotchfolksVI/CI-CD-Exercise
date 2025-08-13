@@ -1,0 +1,10 @@
+[33m5eac824[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Simplify Jenkinsfile - remove script blocks and Unix compatibility for Windows-only
+[33m2dbc0de[m Replace Jenkinsfile with clean version - no tool dependencies
+[33mbc89f58[m Remove all tool dependencies - use only system Node.js with absolute paths
+[33m45c8758[m Fix Node.js paths in Jenkinsfile - use absolute paths for Windows compatibility
+[33m9417607[m Fix Jenkinsfile for Windows - use system Node.js instead of Jenkins tool
+[33m619eeac[m Fix Jenkinsfile syntax error and add proper CI/CD pipeline
+[33m16dd06e[m[33m ([m[1;32mfirst-branch1[m[33m)[m reverse changes in footer
+[33mddd2811[m first branch changes
+[33m2dcb5c8[m changes footer text
+[33me09737c[m essage

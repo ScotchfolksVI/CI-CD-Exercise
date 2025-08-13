@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     environment {
-        NODE_VERSION = '18'
-        NPM_CACHE = '/tmp/.npm'
+        NODE_VERSION = '24'
+        NPM_CACHE = 'C:\\tmp\\.npm'
     }
     
     stages {
@@ -18,11 +18,11 @@ pipeline {
             steps {
                 echo 'Setting up Node.js environment...'
                 script {
-                    def nodeHome = tool name: 'NodeJS-18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    // Use system Node.js instead of Jenkins tool
                     if (isUnix()) {
-                        env.PATH = "${nodeHome}/bin:${env.PATH}"
+                        env.PATH = "/usr/local/bin:/usr/bin:${env.PATH}"
                     } else {
-                        env.PATH = "${nodeHome};${env.PATH}"
+                        env.PATH = "C:\\Program Files\\nodejs;${env.PATH}"
                     }
                 }
             }

@@ -3,7 +3,6 @@ pipeline {
     
     environment {
         NODE_VERSION = '24'
-        NPM_CACHE = 'C:\\tmp\\.npm'
         NODE_PATH = 'C:\\Program Files\\nodejs'
         NPM_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
     }
@@ -16,18 +15,16 @@ pipeline {
             }
         }
         
-        stage('Setup Node.js') {
+        stage('Verify Node.js') {
             steps {
-                echo 'Setting up Node.js environment...'
+                echo 'Verifying Node.js installation...'
                 script {
-                    // Set PATH to include Node.js
                     if (isUnix()) {
-                        env.PATH = "/usr/local/bin:/usr/bin:${env.PATH}"
+                        sh 'node --version'
+                        sh 'npm --version'
                     } else {
-                        env.PATH = "C:\\Program Files\\nodejs;${env.PATH}"
-                        // Verify Node.js is accessible
-                        bat 'node --version'
-                        bat 'npm --version'
+                        bat '"C:\\Program Files\\nodejs\\node.exe" --version'
+                        bat '"C:\\Program Files\\nodejs\\npm.cmd" --version'
                     }
                 }
             }
@@ -40,7 +37,6 @@ pipeline {
                     if (isUnix()) {
                         sh 'npm ci'
                     } else {
-                        // Use full path to npm
                         bat '"C:\\Program Files\\nodejs\\npm.cmd" ci'
                     }
                 }
@@ -55,7 +51,6 @@ pipeline {
                         sh 'npm start &'
                         sh 'sleep 10'
                     } else {
-                        // Use full path to npm
                         bat 'start /B "C:\\Program Files\\nodejs\\npm.cmd" start'
                         bat 'timeout /T 10 >NUL'
                     }
@@ -70,7 +65,6 @@ pipeline {
                     if (isUnix()) {
                         sh 'npm test'
                     } else {
-                        // Use full path to npm
                         bat '"C:\\Program Files\\nodejs\\npm.cmd" test'
                     }
                 }

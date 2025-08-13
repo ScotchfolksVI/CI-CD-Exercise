@@ -4,6 +4,8 @@ pipeline {
     environment {
         NODE_VERSION = '24'
         NPM_CACHE = 'C:\\tmp\\.npm'
+        NODE_PATH = 'C:\\Program Files\\nodejs'
+        NPM_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
     }
     
     stages {
@@ -18,11 +20,14 @@ pipeline {
             steps {
                 echo 'Setting up Node.js environment...'
                 script {
-                    // Use system Node.js instead of Jenkins tool
+                    // Set PATH to include Node.js
                     if (isUnix()) {
                         env.PATH = "/usr/local/bin:/usr/bin:${env.PATH}"
                     } else {
                         env.PATH = "C:\\Program Files\\nodejs;${env.PATH}"
+                        // Verify Node.js is accessible
+                        bat 'node --version'
+                        bat 'npm --version'
                     }
                 }
             }
@@ -35,7 +40,8 @@ pipeline {
                     if (isUnix()) {
                         sh 'npm ci'
                     } else {
-                        bat 'npm ci'
+                        // Use full path to npm
+                        bat '"C:\\Program Files\\nodejs\\npm.cmd" ci'
                     }
                 }
             }
@@ -49,7 +55,8 @@ pipeline {
                         sh 'npm start &'
                         sh 'sleep 10'
                     } else {
-                        bat 'start /B npm start'
+                        // Use full path to npm
+                        bat 'start /B "C:\\Program Files\\nodejs\\npm.cmd" start'
                         bat 'timeout /T 10 >NUL'
                     }
                 }
@@ -63,7 +70,8 @@ pipeline {
                     if (isUnix()) {
                         sh 'npm test'
                     } else {
-                        bat 'npm test'
+                        // Use full path to npm
+                        bat '"C:\\Program Files\\nodejs\\npm.cmd" test'
                     }
                 }
             }
